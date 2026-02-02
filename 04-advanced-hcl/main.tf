@@ -1,5 +1,5 @@
 # 04-advanced-hcl/main.tf
-# COMPLETE FILE — count example
+# COMPLETE FILE — for_each example
 
 terraform {
   required_providers {
@@ -14,32 +14,38 @@ provider "aws" {
   region = "us-east-1"
 }
 
-# Create VPC first
+# Map of subnets with meaningful names
+variable "subnets" {
+  default = {
+    web = "10.0.1.0/24"
+    app = "10.0.2.0/24"
+    db  = "10.0.3.0/24"
+  }
+}
+
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
-
-  tags = {
-    Name = "vdm-count-demo-vpc"
-  }
+  tags       = { Name = "vdm-foreach-demo-vpc" }
 }
 
-# count = 3 creates THREE subnets!
-resource "aws_subnet" "public" {
-  count = 3
+# for_each creates subnets with NAMED keys
+resource "aws_subnet" "named" {
+  for_each = var.subnets
 
   vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.${count.index + 1}.0/24"
+  cidr_block = each.value
 
   tags = {
-    Name = "vdm-public-subnet-${count.index + 1}"
+    Name = "vdm-${each.key}-subnet"
+    Tier = each.key
   }
 }
 
-# Outputs show all subnet IDs
-output "subnet_ids" {
-  value = aws_subnet.public[*].id
-}
-
-output "subnet_cidrs" {
-  value = aws_subnet.public[*].cidr_block
+output "subnet_details" {
+  value = {
+    for k, v in aws_subnet.named : k => {
+      id   = v.id
+      cidr = v.cidr_block
+    }
+  }
 }
