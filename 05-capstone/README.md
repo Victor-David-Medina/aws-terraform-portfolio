@@ -1,12 +1,104 @@
 # Production VPC Infrastructure
 
+
+
 Multi-AZ AWS VPC with Auto Scaling, security monitoring, and operational documentation.
+
+
+
+## Architecture
+
+
+
+```
+
+┌─────────────────────────────────────────────────────────────────────────┐
+
+│                              AWS REGION                                  │
+
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+
+│  │                    VPC (10.0.0.0/16)                            │   │
+
+│  │                                                                 │   │
+
+│  │    ┌─────────────┐              ┌─────────────┐                │   │
+
+│  │    │  Public     │              │  Public     │                │   │
+
+│  │    │  Subnet     │              │  Subnet     │                │   │
+
+│  │    │  AZ-a       │              │  AZ-b       │                │   │
+
+│  │    │ 10.0.1.0/24 │              │ 10.0.2.0/24 │                │   │
+
+│  │    │             │              │             │    ┌────────┐  │   │
+
+│  │    │ ┌─────────┐ │              │             │    │  IGW   │  │   │
+
+│  │    │ │   NAT   │ │              │             │    │        │──┼───┼──► Internet
+
+│  │    │ │ Gateway │ │              │             │    └────────┘  │   │
+
+│  │    │ └────┬────┘ │              │             │                │   │
+
+│  │    └──────┼──────┘              └─────────────┘                │   │
+
+│  │           │                                                     │   │
+
+│  │    ┌──────▼──────┐              ┌─────────────┐                │   │
+
+│  │    │  Private    │              │  Private    │                │   │
+
+│  │    │  Subnet     │              │  Subnet     │                │   │
+
+│  │    │  AZ-a       │              │  AZ-b       │                │   │
+
+│  │    │ 10.0.10.0/24│              │10.0.20.0/24 │                │   │
+
+│  │    │             │              │             │                │   │
+
+│  │    │ ┌─────────┐ │   ◄──ASG──►  │ ┌─────────┐ │                │   │
+
+│  │    │ │   EC2   │ │              │ │   EC2   │ │                │   │
+
+│  │    │ │ (min:2) │ │              │ │ (max:6) │ │                │   │
+
+│  │    │ └─────────┘ │              │ └─────────┘ │                │   │
+
+│  │    └─────────────┘              └─────────────┘                │   │
+
+│  │                                                                 │   │
+
+│  └─────────────────────────────────────────────────────────────────┘   │
+
+│                                                                         │
+
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐             │
+
+│  │  GuardDuty   │    │  CloudWatch  │    │  S3 + DDB    │             │
+
+│  │  (Threats)   │    │  (Metrics)   │    │ (TF State)   │             │
+
+│  └──────────────┘    └──────────────┘    └──────────────┘             │
+
+└─────────────────────────────────────────────────────────────────────────┘
+
+```
+
+
 
 ## Problem Statement
 
+
+
 Organizations need scalable, secure VPC infrastructure that can be version-controlled, reviewed, and deployed consistently. This project demonstrates production patterns for AWS networking with Terraform.
 
+
+
 ## Architecture Decisions
+
+
 
 | Component | Choice | Rationale |
 
@@ -22,7 +114,11 @@ Organizations need scalable, secure VPC infrastructure that can be version-contr
 
 | Security | GuardDuty + SGs | Defense in depth |
 
+
+
 ## Quick Start
+
+
 
 ```bash
 
@@ -36,7 +132,11 @@ terraform init && terraform plan
 
 ```
 
+
+
 ## Estimated Monthly Cost
+
+
 
 | Resource | Cost |
 
@@ -52,10 +152,18 @@ terraform init && terraform plan
 
 | **Total** | **~$53/month** |
 
+
+
 ## Documentation
+
+
 
 - [RUNBOOK.md](docs/RUNBOOK.md) - Deployment and troubleshooting
 
 - [ADR-001](docs/ADR-001-vpc-design.md) - VPC architecture decisions
 
 - [ADR-002](docs/ADR-002-auto-scaling.md) - Auto Scaling strategy
+
+
+
+#
