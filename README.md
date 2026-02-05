@@ -1,61 +1,99 @@
-Terraform Portfolio
+# AWS Terraform Portfolio
 
-![Terraform](https://img.shields.io/badge/Terraform-1.6+-623CE4?logo=terraform) ![AWS](https://img.shields.io/badge/AWS-VPC%20%7C%20EC2%20%7C%20S3-FF9900?logo=amazon-aws) ![CI/CD](https://img.shields.io/badge/CI%2FCD-Passing-success) ![Security](https://img.shields.io/badge/Security-tfsec%20scanned-blue)
+![Terraform](https://img.shields.io/badge/Terraform-1.6+-623CE4?logo=terraform)
+![AWS](https://img.shields.io/badge/AWS-VPC%20%7C%20EC2%20%7C%20S3-FF9900?logo=amazon-aws)
+![CI/CD](https://img.shields.io/badge/CI%2FCD-Passing-success)
+![Security](https://img.shields.io/badge/Security-tfsec%20scanned-blue)
 
-Production-grade AWS infrastructure built with Terraform, featuring multi-AZ VPC architecture, Auto Scaling, GuardDuty security monitoring, and comprehensive operational documentation.
+Production‑grade AWS infrastructure built with Terraform, featuring **multi‑AZ VPC architecture**, **Auto Scaling**, **GuardDuty security monitoring**, and **operational documentation** (runbooks, ADRs, cost awareness).
 
-## What This Demonstrates
+---
 
-- **Infrastructure as Code**: Complete AWS environment defined in Terraform
+## 🔎 What This Demonstrates
 
-- **Security Best Practices**: Least-privilege IAM, security groups, GuardDuty
+- **Infrastructure as Code:** Complete AWS environment defined in Terraform
+- **Security Best Practices:** Least‑privilege security groups, GuardDuty, remote state locking
+- **Operational Readiness:** Runbooks, ADRs, monitoring, incident playbooks
+- **Team Collaboration:** Remote state, CI/CD validation, code review‑friendly workflow
 
-- **Operational Readiness**: Runbooks, ADRs, monitoring, incident playbooks
+---
 
-- **Team Collaboration**: Remote state, CI/CD validation, code review workflow
+## 🏗 Architecture
 
-## Project Structure
+> High‑availability VPC with public/private subnets across multiple AZs, Auto Scaling, and centralized security/monitoring.
 
-| Folder | Description | Key Concepts |
 
-|--------|-------------|--------------|
+Production VPC Infrastructure
+┌─────────────────────────────────────────────────────────────────────────┐
 
-| `01-s3-bucket/` | S3 state backend | Remote state, versioning |
+│                              AWS REGION                                 │
 
-| `02-vpc/` | Basic VPC | Subnets, route tables, IGW |
+│  ┌─────────────────────────────────────────────────────────────────┐    │
 
-| `03-modules/` | Reusable modules | Module design, variables |
+│  │                    VPC (10.0.0.0/16)                            │    │
 
-| `04-advanced-hcl/` | Advanced patterns | Loops, conditionals, validation |
+│  │                                                                 │    │
 
-| `05-capstone/` | **Production VPC** | Multi-AZ, ASG, GuardDuty, CI/CD |
+│  │    ┌─────────────┐              ┌─────────────┐                 │    │
 
-## Capstone Highlights
+│  │    │  Public     │              │  Public     │                 |    |
 
-- Multi-AZ VPC with 10.0.0.0/16 CIDR, public/private subnet segmentation
+│  │    │  Subnet     │              │  Subnet     │                 │    │
 
-- Auto Scaling Group (2-6 instances) with CloudWatch CPU-based scaling
+│  │    │  AZ-a       │              │  AZ-b       │                 │    │
 
-- NAT Gateway for secure private subnet internet access
+│  │    │ 10.0.1.0/24 │              │ 10.0.2.0/24 │                 │    │
 
-- Security groups with least-privilege ingress/egress rules
+│  │    │             │              │             │    ┌────────┐   │    │
 
-- GuardDuty threat detection enabled
+│  │    │ ┌─────────┐ │              │             │    │  IGW   │   │    │
 
-- S3 remote state with DynamoDB locking
+│  │    │ │   NAT   │ │              │             │    │        │── ┼─── ┼──► Internet
 
-- GitHub Actions CI/CD (fmt → validate → tfsec → plan)
+│  │    │ │ Gateway │ │              │             │    └────────┘   │    │
 
-## Certifications
+│  │    │ └────┬────┘ │              │             │                 │    │
 
-- **AWS Cloud Practitioner (CLF-C02)** - Jan 2026
+│  │    └──────┼──────┘              └─────────────┘                 │    │
 
-- **HashiCorp Terraform Associate (004)** - Feb 2026
+│  │           │                                                     │    │
 
-## Contact
+│  │    ┌──────▼──────┐              ┌─────────────┐                 │    │
 
-- **Email**: v.davidmedina@gmail.com
+│  │    │  Private    │              │  Private    │                 │    │
 
-- **LinkedIn**: linkedin.com/in/victor-david-medina
+│  │    │  Subnet     │              │  Subnet     │                 │    │
 
-- **Location**: Boston, MA (Open to Remote)
+│  │    │  AZ-a       │              │  AZ-b       │                 │    │
+
+│  │    │ 10.0.10.0/24│              │10.0.20.0/24 │                 │    │
+
+│  │    │             │              │             │                 │    │
+
+│  │    │ ┌─────────┐ │   ◄──ASG──►  │ ┌─────────┐ │                 │    │
+
+│  │    │ │   EC2   │ │              │ │   EC2   │ │                 │    │
+
+│  │    │ │ (min:2) │ │              │ │ (max:6) │ │                 │    │
+
+│  │    │ └─────────┘ │              │ └─────────┘ │                 │    │
+
+│  │    └─────────────┘              └─────────────┘                 │    │
+
+│  │                                                                 │    │
+
+│  └─────────────────────────────────────────────────────────────────┘    │
+
+│                                                                         │
+
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐               │
+
+│  │  GuardDuty   │    │  CloudWatch  │    │  S3 + DDB    │               │
+
+│  │  (Threats)   │    │  (Metrics)   │    │ (TF State)   │               │
+
+│  └──────────────┘    └──────────────┘    └──────────────┘               │
+
+└─────────────────────────────────────────────────────────────────────────┘
+
+
