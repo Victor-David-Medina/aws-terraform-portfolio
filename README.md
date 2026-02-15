@@ -5,20 +5,26 @@
 ![CI/CD](https://img.shields.io/badge/CI%2FCD-Passing-success)
 ![Security](https://img.shields.io/badge/Security-tfsec%20scanned-blue)
 
-Production‑grade AWS infrastructure built with Terraform, featuring multi‑AZ VPC architecture, Auto Scaling, GuardDuty security monitoring, and comprehensive operational documentation.
+Production-grade AWS infrastructure built with Terraform, featuring multi-AZ VPC architecture, Auto Scaling, GuardDuty security monitoring, and comprehensive operational documentation.
 
 ---
 
-## 🔍 What This Demonstrates
+## About Me
 
-- **Infrastructure as Code** – Complete AWS environment defined in Terraform
-- **Security Best Practices** – Least‑privilege security groups, GuardDuty enabled, tfsec scans in CI
-- **Operational Readiness** – Runbooks, ADRs, monitoring patterns, and incident playbooks
-- **Team Collaboration** – Remote state, CI/CD validation, and a reviewable change workflow
+Operations engineer with 8+ years leading enterprise system deployments, now building cloud infrastructure with Terraform and AWS. My background in logistics operations (USMC), SaaS platform rollouts (ezCater), and healthcare compliance (Amwell) gives me a strong foundation in reliability, process documentation, and incident response — the same skills that drive effective cloud operations.
 
 ---
 
-## 🚀 Start Here (If You Have 5 Minutes)
+## What This Demonstrates
+
+- **Infrastructure as Code** – Complete AWS environment defined in Terraform with modular design
+- **Security Best Practices** – Least-privilege security groups, GuardDuty threat detection, tfsec scans in CI
+- **Operational Readiness** – Runbooks, ADRs, monitoring alarms, cost governance, and incident playbooks
+- **Team Collaboration** – Remote state configuration, CI/CD validation, and reviewable change workflow
+
+---
+
+## Start Here (If You Have 5 Minutes)
 
 If you are a recruiter or hiring manager, start with:
 
@@ -27,13 +33,12 @@ If you are a recruiter or hiring manager, start with:
 3. **Docs folder (inside capstone):**
    - Operational runbook
    - Architecture Decision Records (ADRs)
-   - Any architecture diagrams you’ve added
 
-This path shows **how I think about Day‑2 operations**, not just how I write Terraform.
+This path shows **how I think about Day-2 operations**, not just how I write Terraform.
 
 ---
 
-## 🏗️ Project Structure
+## Project Structure
 
 | Folder             | Description         | Key Concepts                          |
 |--------------------|---------------------|---------------------------------------|
@@ -41,23 +46,50 @@ This path shows **how I think about Day‑2 operations**, not just how I write T
 | `02-vpc/`          | Basic VPC           | Subnets, route tables, IGW            |
 | `03-modules/`      | Reusable modules    | Module design, variables, DRY         |
 | `04-advanced-hcl/` | Advanced patterns   | Loops, conditionals, validation       |
-| `05-capstone/`     | **Production VPC**  | Multi‑AZ, ASG, GuardDuty, CI/CD, docs |
+| `05-capstone/`     | **Production VPC**  | Multi-AZ, ASG, GuardDuty, CI/CD, docs |
 
-Each phase builds on the previous one, moving from **basic resources** to a **production‑style, multi‑AZ infrastructure** with monitoring and security.
+Each phase builds on the previous one, moving from **basic resources** to a **production-style, multi-AZ infrastructure** with monitoring and security.
 
 ---
 
-## 🌐 Capstone Highlights (`05-capstone/`)
+## Capstone Highlights (`05-capstone/`)
 
-The capstone folder demonstrates a production‑style VPC stack:
+The capstone folder demonstrates a production-style VPC stack:
 
-- Multi‑AZ VPC with `10.0.0.0/16` CIDR and public/private subnet segmentation
-- Auto Scaling Group (2–6 instances) with CloudWatch CPU‑based scaling
+- Multi-AZ VPC with `10.0.0.0/16` CIDR and public/private subnet segmentation
+- Auto Scaling Group (2–6 instances) with CPU-based target tracking
 - NAT Gateway for secure private subnet internet access
-- Security groups with least‑privilege ingress/egress rules
-- GuardDuty threat detection enabled
-- S3 remote state with DynamoDB locking
+- Security groups with least-privilege ingress/egress rules
+- GuardDuty threat detection for continuous security monitoring
+- CloudWatch alarms for scaling visibility and cost optimization
+- AWS Budget alerts for cost governance
+- S3 remote state with DynamoDB locking (backend config included)
 - GitHub Actions CI/CD (terraform **fmt → validate → tfsec → plan**)
-- Runbook and ADRs to show operational and architectural decision‑making
+- Runbook and ADRs to show operational and architectural decision-making
 
 ---
+
+## Technologies
+
+| Category | Tools |
+|----------|-------|
+| IaC | Terraform 1.6+, HCL |
+| Cloud | AWS (VPC, EC2, ASG, S3, DynamoDB, GuardDuty, CloudWatch, Budgets) |
+| CI/CD | GitHub Actions |
+| Security | tfsec, least-privilege security groups |
+| Documentation | ADRs, operational runbooks, cost tables |
+
+---
+
+## Certifications
+
+- **AWS Cloud Practitioner (CLF-C02)** – In Progress
+- **HashiCorp Terraform Associate (004)** – Planned
+
+---
+
+## Contact
+
+- **LinkedIn:** [linkedin.com/in/victor-david-medina](https://linkedin.com/in/victor-david-medina)
+- **Email:** [v.davidmedina@gmail.com](mailto:v.davidmedina@gmail.com)
+- **Location:** Boston, MA
