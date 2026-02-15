@@ -1,101 +1,102 @@
-# modules/compute/main.tf
-# Auto Scaling Group with launch template for elastic compute capacity
+# =============================================================================
+# 05-capstone/main.tf
+# VDM Cloud Infrastructure Capstone - Production VPC Stack
 #
-# Design decisions documented in: docs/ADR-002-auto-scaling.md
-# - Min 2 instances across AZs for high availability
-# - Max 6 instances as cost cap for demo environment
-# - Target tracking on CPU at 70% for responsive scaling
+# This is the root module that composes all infrastructure components.
+# Each module handles a specific concern: networking, security, compute,
+# monitoring, threat detection, and cost governance.
+# =============================================================================
 
-# -----------------------------------------------------------------------------
-# DATA SOURCE: Latest Amazon Linux 2023 AMI
-# Using SSM parameter avoids hardcoding AMI IDs that change per region
-# -----------------------------------------------------------------------------
-data "aws_ssm_parameter" "al2023" {
-  name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
-}
+terraform {
+  required_version = ">= 1.0.0"
 
-# -----------------------------------------------------------------------------
-# LAUNCH TEMPLATE
-# Defines the instance configuration that ASG uses to launch new instances
-# Separated from ASG so template can be versioned independently
-# -----------------------------------------------------------------------------
-resource "aws_launch_template" "app" {
-  name_prefix   = "${var.project_name}-${var.environment}-"
-  image_id      = data.aws_ssm_parameter.al2023.value
-  instance_type = var.instance_type
-
-  # Associate with web security group for HTTP/HTTPS access
-  vpc_security_group_ids = [var.security_group_id]
-
-  # User data installs a basic web server for health check validation
-  user_data = base64encode(<<-EOF
-    #!/bin/bash
-    yum update -y
-    yum install -y httpd
-    systemctl start httpd
-    systemctl enable httpd
-    echo "<h1>VDM Cloud - $(hostname)</h1>" > /var/www/html/index.html
-  EOF
-  )
-
-  tag_specifications {
-    resource_type = "instance"
-    tags = {
-      Name        = "${var.project_name}-${var.environment}-app"
-      Project     = var.project_name
-      Environment = var.environment
-      ManagedBy   = "Terraform"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
     }
   }
 
-  tags = {
-    Name = "${var.project_name}-${var.environment}-launch-template"
-  }
+  # Backend configuration - uncomment for production use with S3 remote state
+  # backend "s3" {
+  #   bucket       = "vdm-terraform-state"
+  #   key          = "capstone/terraform.tfstate"
+  #   region       = "us-east-1"
+  #   use_lockfile = true
+  # }
+}
+
+provider "aws" {
+  region = var.aws_region
 }
 
 # -----------------------------------------------------------------------------
-# AUTO SCALING GROUP
-# Distributes instances across private subnets in multiple AZs
-# Uses target tracking to maintain CPU utilization near 70%
+# NETWORKING
+# Multi-AZ VPC with public/private subnet segmentation
 # -----------------------------------------------------------------------------
-resource "aws_autoscaling_group" "app" {
-  name                = "${var.project_name}-${var.environment}-asg"
-  desired_capacity    = var.desired_capacity
-  min_size            = var.min_size
-  max_size            = var.max_size
-  vpc_zone_identifier = var.private_subnet_ids
+module "vpc" {
+  source = "./modules/vpc"
 
-  # Health check grace period gives instances time to boot and pass checks
-  health_check_type         = "EC2"
-  health_check_grace_period = 300
-
-  launch_template {
-    id      = aws_launch_template.app.id
-    version = "$Latest"
-  }
-
-  tag {
-    key                 = "Name"
-    value               = "${var.project_name}-${var.environment}-asg"
-    propagate_at_launch = false
-  }
+  project_name = var.project_name
+  environment  = var.environment
 }
 
 # -----------------------------------------------------------------------------
-# TARGET TRACKING SCALING POLICY
-# AWS manages both scale-out and scale-in based on CPU target
-# Simpler than step scaling and handles most web workload patterns well
-# See ADR-002 for alternatives considered
+# SECURITY GROUPS
+# Tiered security: web (public-facing) → db (private, web-tier only)
 # -----------------------------------------------------------------------------
-resource "aws_autoscaling_policy" "cpu_target" {
-  name                   = "${var.project_name}-${var.environment}-cpu-target"
-  autoscaling_group_name = aws_autoscaling_group.app.name
-  policy_type            = "TargetTrackingScaling"
+module "security" {
+  source = "./modules/security"
 
-  target_tracking_configuration {
-    predefined_metric_specification {
-      predefined_metric_type = "ASGAverageCPUUtilization"
-    }
-    target_value = var.target_cpu
-  }
+  project_name = var.project_name
+  environment  = var.environment
+  vpc_id       = module.vpc.vpc_id
+}
+
+# -----------------------------------------------------------------------------
+# COMPUTE
+# Auto Scaling Group across private subnets for elastic capacity
+# See docs/ADR-002-auto-scaling.md for design rationale
+# -----------------------------------------------------------------------------
+module "compute" {
+  source = "./modules/compute"
+
+  project_name       = var.project_name
+  environment        = var.environment
+  private_subnet_ids = module.vpc.private_subnet_ids
+  security_group_id  = module.security.web_sg_id
+}
+
+# -----------------------------------------------------------------------------
+# MONITORING
+# CloudWatch alarms for operational visibility into scaling events
+# -----------------------------------------------------------------------------
+module "monitoring" {
+  source = "./modules/monitoring"
+
+  project_name = var.project_name
+  environment  = var.environment
+  asg_name     = module.compute.asg_name
+}
+
+# -----------------------------------------------------------------------------
+# SECURITY MONITORING
+# GuardDuty threat detection - analyzes VPC Flow Logs and CloudTrail
+# -----------------------------------------------------------------------------
+module "security_monitoring" {
+  source = "./modules/security-monitoring"
+
+  project_name = var.project_name
+  environment  = var.environment
+}
+
+# -----------------------------------------------------------------------------
+# COST GOVERNANCE
+# Budget alerts to prevent cost surprises in demo environment
+# -----------------------------------------------------------------------------
+module "cost" {
+  source = "./modules/cost"
+
+  project_name = var.project_name
+  environment  = var.environment
 }
