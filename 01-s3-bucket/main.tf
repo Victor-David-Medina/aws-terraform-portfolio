@@ -14,7 +14,7 @@ resource "aws_s3_bucket" "my_bucket" {
 
   tags = {
     Environment = "dev"
-    Project      = "VDM-Cloud-Ops"
-    ManagedBy    = "Terraform"
+    Project     = "VDM-Cloud-Ops"
+    ManagedBy   = "Terraform"
   }
 }
