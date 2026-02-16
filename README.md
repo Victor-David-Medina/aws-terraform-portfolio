@@ -2,7 +2,7 @@
 
 ![Terraform](https://img.shields.io/badge/Terraform-1.6+-623CE4?logo=terraform)
 ![AWS](https://img.shields.io/badge/AWS-VPC%20%7C%20EC2%20%7C%20S3-FF9900?logo=amazon-aws)
-![CI/CD](https://img.shields.io/badge/CI%2FCD-Passing-success)
+![Terraform CI](https://github.com/Victor-David-Medina/aws-terraform-portfolio/actions/workflows/terraform.yml/badge.svg)
 ![Security](https://img.shields.io/badge/Security-tfsec%20scanned-blue)
 
 Production-grade AWS infrastructure built with Terraform, featuring multi-AZ VPC architecture, Auto Scaling, GuardDuty security monitoring, and comprehensive operational documentation.
@@ -93,3 +93,4 @@ The capstone folder demonstrates a production-style VPC stack:
 - **LinkedIn:** [linkedin.com/in/victor-david-medina](https://linkedin.com/in/victor-david-medina)
 - **Email:** [v.davidmedina@gmail.com](mailto:v.davidmedina@gmail.com)
 - **Location:** Boston, MA
+
