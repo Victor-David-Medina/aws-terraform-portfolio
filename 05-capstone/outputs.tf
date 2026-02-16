@@ -57,3 +57,13 @@ output "budget_name" {
   description = "AWS Budget name"
   value       = module.cost.budget_name
 }
+# --- Monitoring ---
+output "cpu_high_alarm_arn" {
+  description = "High CPU CloudWatch alarm ARN"
+  value       = module.monitoring.cpu_high_alarm_arn
+}
+
+output "cpu_low_alarm_arn" {
+  description = "Low CPU CloudWatch alarm ARN"
+  value       = module.monitoring.cpu_low_alarm_arn
+}
