@@ -1,0 +1,20 @@
+# terraform.tfvars.example — Phase 03: Reusable Modules
+# Copy to terraform.tfvars and customize before running terraform apply.
+#
+# NOTE: This phase uses hardcoded values in main.tf for the module calls.
+# The dev and prod VPCs are defined inline with different CIDRs.
+# To customize, edit the module blocks in main.tf directly:
+#
+#   module "vpc_dev" {
+#     vpc_cidr     = "10.0.0.0/16"   # Dev VPC CIDR
+#     environment  = "dev"
+#     project_name = "vdm"
+#   }
+#
+#   module "vpc_prod" {
+#     vpc_cidr     = "10.1.0.0/16"   # Prod VPC CIDR (non-overlapping)
+#     environment  = "prod"
+#     project_name = "vdm"
+#   }
+#
+# Backend: S3 bucket "vdm-terraform-state-a31c60f6" must exist before init.
