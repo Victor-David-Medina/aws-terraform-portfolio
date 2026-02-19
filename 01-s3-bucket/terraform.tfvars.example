@@ -1,0 +1,12 @@
+# terraform.tfvars.example — Phase 01: S3 State Bucket
+# Copy to terraform.tfvars and customize before running terraform apply.
+#
+# NOTE: This phase uses hardcoded values in main.tf (no variables.tf).
+# To make it configurable, extract these into variables:
+#
+# aws_region  = "us-east-1"        # AWS region for the S3 bucket
+# bucket_name = "vdm-dm-terraform" # Must be globally unique
+# environment = "dev"              # Used in resource tags
+# project_name = "VDM-Cloud-Ops"   # Used in resource tags
+#
+# For now, edit main.tf directly to change the bucket name or region.
