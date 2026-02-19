@@ -1,0 +1,7 @@
+# terraform.tfvars.example — Phase 02: Basic VPC
+# Copy to terraform.tfvars and customize before running terraform apply.
+
+aws_region   = "us-east-1"      # AWS region for VPC deployment
+environment  = "dev"            # Environment tag (dev, staging, prod)
+vpc_cidr     = "10.0.0.0/16"   # VPC CIDR block — 65,536 IPs
+project_name = "vdm-cloud-ops"  # Used in resource Name tags
