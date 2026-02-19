@@ -8,7 +8,7 @@
 # =============================================================================
 
 terraform {
-  required_version = ">= 1.0.0"
+  required_version = ">= 1.10.0"
 
   required_providers {
     aws = {
@@ -17,7 +17,18 @@ terraform {
     }
   }
 
-  # Backend configuration - uncomment for production use with S3 remote state
+  # ---------------------------------------------------------------------------
+  # Remote State — S3 Backend (see ADR-005: docs/adr/ADR-005-remote-state.md)
+  #
+  # The S3 bucket is created by backend-setup/. You must bootstrap it first:
+  #   cd backend-setup && terraform init && terraform apply && cd ..
+  #
+  # Then uncomment the block below and run:
+  #   terraform init -migrate-state
+  #
+  # uses use_lockfile (Terraform 1.10+) instead of DynamoDB for state locking.
+  # See backend-setup/README.md for the full bootstrap walkthrough.
+  # ---------------------------------------------------------------------------
   # backend "s3" {
   #   bucket       = "vdm-terraform-state"
   #   key          = "capstone/terraform.tfstate"
@@ -32,7 +43,7 @@ provider "aws" {
 
 # -----------------------------------------------------------------------------
 # NETWORKING
-# Multi-AZ VPC with public/private subnet segmentation
+# Multi-AZ VPC with public/private subnet segmentation (see ADR-001)
 # -----------------------------------------------------------------------------
 module "vpc" {
   source = "./modules/vpc"
@@ -60,8 +71,7 @@ module "security" {
 
 # -----------------------------------------------------------------------------
 # COMPUTE
-# Auto Scaling Group across private subnets for elastic capacity
-# See docs/ADR-002-auto-scaling.md for design rationale
+# Auto Scaling Group across private subnets for elastic capacity (see ADR-002)
 # -----------------------------------------------------------------------------
 module "compute" {
   source = "./modules/compute"
