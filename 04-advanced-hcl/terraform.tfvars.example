@@ -1,0 +1,18 @@
+# terraform.tfvars.example — Phase 04: Advanced HCL
+# Copy to terraform.tfvars and customize before running terraform apply.
+#
+# NOTE: This phase demonstrates Terraform workspaces. CIDRs are
+# determined by the active workspace, not by tfvars:
+#
+#   default workspace → 10.0.0.0/16
+#   dev workspace     → 10.1.0.0/16
+#   prod workspace    → 10.2.0.0/16
+#
+# Usage:
+#   terraform workspace new dev
+#   terraform apply              # Uses 10.1.0.0/16 automatically
+#
+#   terraform workspace new prod
+#   terraform apply              # Uses 10.2.0.0/16 automatically
+#
+# No terraform.tfvars needed — workspace selection drives the config.
