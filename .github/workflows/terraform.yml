@@ -21,10 +21,13 @@ jobs:
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
 
-      - name: Security Scan (tfsec)
-        uses: aquasecurity/tfsec-action@v1.0.0
+      - name: Security Scan (Trivy)
+        uses: aquasecurity/trivy-action@master
         with:
-          soft_fail: true
+          scan-type: config
+          scan-ref: .
+          exit-code: 0
+          severity: HIGH,CRITICAL
 
       - name: Terraform Init (Capstone)
         run: terraform init -backend=false

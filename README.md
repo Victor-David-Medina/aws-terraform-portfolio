@@ -1,12 +1,23 @@
-# Terraform Portfolio — VDM Cloud Infrastructure
+<p align="center">
+  <img src="https://img.shields.io/badge/Terraform-1.10+-623CE4?style=for-the-badge&logo=terraform&logoColor=white" alt="Terraform" />
+  <img src="https://img.shields.io/badge/AWS-VPC%20%7C%20EC2%20%7C%20ASG%20%7C%20S3-FF9900?style=for-the-badge&logo=amazonwebservices&logoColor=white" alt="AWS" />
+  <img src="https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white" alt="CI/CD" />
+  <img src="https://img.shields.io/badge/Security-Trivy_Scanned-1904DA?style=for-the-badge&logo=trivy&logoColor=white" alt="Security" />
+</p>
 
-![Terraform](https://img.shields.io/badge/Terraform-1.10+-623CE4?logo=terraform)
-![AWS](https://img.shields.io/badge/AWS-VPC%20%7C%20EC2%20%7C%20ASG%20%7C%20S3-FF9900?logo=amazonwebservices)
-![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF?logo=githubactions)
-![Security](https://img.shields.io/badge/Security-tfsec_scanned-blue)
-![Terraform CI](https://github.com/Victor-David-Medina/aws-terraform-portfolio/actions/workflows/terraform.yml/badge.svg)
+<h1 align="center">Terraform Portfolio — VDM Cloud Infrastructure</h1>
 
-> Production-grade AWS infrastructure built with Terraform — multi-AZ VPC, Auto Scaling, GuardDuty threat detection, and full Day-2 operational documentation including runbooks, incident response procedures, and architecture decision records.
+<p align="center">
+  <a href="https://github.com/Victor-David-Medina/aws-terraform-portfolio/actions/workflows/terraform.yml">
+    <img src="https://github.com/Victor-David-Medina/aws-terraform-portfolio/actions/workflows/terraform.yml/badge.svg" alt="Terraform CI" />
+  </a>
+</p>
+
+<p align="center">
+  <strong>Production-grade AWS infrastructure built with Terraform</strong><br/>
+  Multi-AZ VPC &bull; Auto Scaling &bull; GuardDuty Threat Detection &bull; Security-First CI/CD<br/>
+  Full Day-2 operational docs: runbooks, incident response, and architecture decision records
+</p>
 
 ---
 
@@ -34,42 +45,43 @@ Operations professional with 8+ years leading enterprise system deployments, now
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                               AWS REGION                                │
-│  ┌─────────────────────────────────────────────────────────────────┐    │
-│  │                        VPC (10.0.0.0/16)                        │    │
-│  │                                                                 │    │
-│  │    ┌─────────────┐              ┌─────────────┐                 │    │
-│  │    │  Public     │              │  Public     │                 │    │
-│  │    │  Subnet     │              │  Subnet     │                 │    │
-│  │    │  AZ-a       │              │  AZ-b       │                 │    │
-│  │    │ 10.0.1.0/24 │              │ 10.0.2.0/24 │                 │    │
-│  │    │             │              │             │    ┌────────┐   │    │
-│  │    │ ┌─────────┐ │              │             │    │  IGW   │   │    │
-│  │    │ │   NAT   │ │              │             │    │        │── ┼─── ┼──► Internet
-│  │    │ │ Gateway │ │              │             │    └────────┘   │    │
-│  │    │ └────┬────┘ │              │             │                 │    │
-│  │    └──────┼──────┘              └─────────────┘                 │    │
-│  │           │                                                     │    │
-│  │    ┌──────▼──────┐              ┌─────────────┐                 │    │
-│  │    │  Private    │              │  Private    │                 │    │
-│  │    │  Subnet     │              │  Subnet     │                 │    │
-│  │    │  AZ-a       │              │  AZ-b       │                 │    │
-│  │    │ 10.0.10.0/24│              │10.0.20.0/24 │                 │    │
-│  │    │             │              │             │                 │    │
-│  │    │ ┌─────────┐ │   ◄──ASG──►  │ ┌─────────┐ │                 │    │
-│  │    │ │   EC2   │ │              │ │   EC2   │ │                 │    │
-│  │    │ │ (min:2) │ │              │ │ (max:6) │ │                 │    │
-│  │    │ └─────────┘ │              │ └─────────┘ │                 │    │
-│  │    └─────────────┘              └─────────────┘                 │    │
-│  │                                                                 │    │
-│  └─────────────────────────────────────────────────────────────────┘    │
-│                                                                         │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐               │
-│  │  GuardDuty   │    │  CloudWatch  │    │  S3 Backend  │               │
-│  │  (Threats)   │    │  (Metrics)   │    │ (TF State)   │               │
-│  └──────────────┘    └──────────────┘    └──────────────┘               │
-└─────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────┐
+│                              AWS REGION                                   │
+│                                                                           │
+│  ┌─────────────────────────────────────────────────────────────────────┐  │
+│  │                         VPC (10.0.0.0/16)                          │  │
+│  │                                                                     │  │
+│  │   ┌──────────────┐                ┌──────────────┐                  │  │
+│  │   │  Public       │                │  Public       │                  │  │
+│  │   │  Subnet       │                │  Subnet       │                  │  │
+│  │   │  AZ-a         │                │  AZ-b         │   ┌──────────┐  │  │
+│  │   │ 10.0.1.0/24   │                │ 10.0.2.0/24   │   │   IGW    │  │  │
+│  │   │               │                │               │   │          │──┼──┼──► Internet
+│  │   │  ┌──────────┐ │                │               │   └──────────┘  │  │
+│  │   │  │   NAT    │ │                │               │                  │  │
+│  │   │  │ Gateway  │ │                │               │                  │  │
+│  │   │  └─────┬────┘ │                │               │                  │  │
+│  │   └────────┼──────┘                └──────────────┘                  │  │
+│  │            │                                                         │  │
+│  │   ┌────────▼─────┐   ◄── ASG ──►  ┌──────────────┐                  │  │
+│  │   │  Private      │                │  Private       │                  │  │
+│  │   │  Subnet       │                │  Subnet       │                  │  │
+│  │   │  AZ-a         │                │  AZ-b         │                  │  │
+│  │   │ 10.0.10.0/24  │                │ 10.0.20.0/24  │                  │  │
+│  │   │               │                │               │                  │  │
+│  │   │  ┌──────────┐ │                │  ┌──────────┐ │                  │  │
+│  │   │  │   EC2    │ │                │  │   EC2    │ │                  │  │
+│  │   │  │ (min: 2) │ │                │  │ (max: 6) │ │                  │  │
+│  │   │  └──────────┘ │                │  └──────────┘ │                  │  │
+│  │   └──────────────┘                └──────────────┘                  │  │
+│  │                                                                     │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                           │
+│  ┌────────────────┐   ┌────────────────┐   ┌────────────────┐            │
+│  │   GuardDuty    │   │   CloudWatch   │   │  S3 Backend    │            │
+│  │   (Threats)    │   │   (Metrics)    │   │  (TF State)    │            │
+│  └────────────────┘   └────────────────┘   └────────────────┘            │
+└───────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -79,7 +91,7 @@ Operations professional with 8+ years leading enterprise system deployments, now
 | Competency | Implementation | Where to Look |
 |-----------|---------------|---------------|
 | **Infrastructure as Code** | Multi-AZ VPC with 6 Terraform modules, DRY patterns | [`05-capstone/`](./05-capstone/) |
-| **CI/CD Pipelines** | 4-stage GitHub Actions: fmt → tfsec → init → validate | [`.github/workflows/`](./.github/workflows/terraform.yml) |
+| **CI/CD Pipelines** | 4-stage GitHub Actions: fmt → Trivy → init → validate | [`.github/workflows/`](./.github/workflows/terraform.yml) |
 | **Monitoring & Alerting** | CloudWatch CPU alarms, GuardDuty threat detection | [`modules/monitoring/`](./05-capstone/modules/monitoring/) |
 | **Network Security** | Least-privilege SGs, SG chaining, SSM-only access (no SSH) | [`SECURITY-DECISIONS.md`](./05-capstone/docs/SECURITY-DECISIONS.md) |
 | **Incident Response** | 5 runbook procedures, severity matrix, comms templates | [`RUNBOOK.md`](./05-capstone/docs/RUNBOOK.md) |
@@ -95,7 +107,7 @@ Every push triggers a security-first validation pipeline — zero AWS credential
 
 ```
   ┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
-  │   fmt    │────►│  tfsec   │────►│   init   │────►│ validate │
+  │   fmt    │────►│  Trivy   │────►│   init   │────►│ validate │
   │  check   │     │   scan   │     │ (no AWS) │     │  (HCL)   │
   └──────────┘     └──────────┘     └──────────┘     └──────────┘
    Formatting       Security         Provider         Syntax &
@@ -156,7 +168,8 @@ All operational documentation lives in the capstone project:
 | Infrastructure as Code | Terraform 1.10+, HCL |
 | Cloud Platform | AWS (VPC, EC2, ASG, S3, GuardDuty, CloudWatch, Budgets) |
 | CI/CD | GitHub Actions (security-first pipeline) |
-| Security | tfsec scanning, least-privilege SGs, SSM Session Manager |
+| Security Scanning | Trivy (IaC misconfiguration detection) |
+| Access Management | Least-privilege SGs, SSM Session Manager (no SSH) |
 | State Management | S3 backend with `use_lockfile`, encryption, versioning |
 | Documentation | ADRs, operational runbooks, incident response, cost analysis |
 
@@ -172,5 +185,5 @@ All operational documentation lives in the capstone project:
 
 **Victor David Medina** — Boston, MA
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Victor_David_Medina-0A66C2?logo=linkedin&logoColor=white)](https://linkedin.com/in/victor-david-medina)
-[![Email](https://img.shields.io/badge/Email-v.davidmedina%40gmail.com-EA4335?logo=gmail&logoColor=white)](mailto:v.davidmedina@gmail.com)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Victor_David_Medina-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/victor-david-medina)
+[![Email](https://img.shields.io/badge/Email-v.davidmedina%40gmail.com-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:v.davidmedina@gmail.com)

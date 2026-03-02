@@ -13,20 +13,20 @@
 ## Architecture
 
 ```
-┌─────────────────────────────────────────┐
-│              main.tf (root)              │
-│                                         │
-│  module "vpc_dev" ──→ ./modules/vpc     │
-│    vpc_cidr = "10.0.0.0/16"            │
-│    environment = "dev"                  │
-│                                         │
-│  module "vpc_prod" ──→ ./modules/vpc    │
-│    vpc_cidr = "10.1.0.0/16"            │
-│    environment = "prod"                 │
-└─────────────────────────────────────────┘
-                  ↓
-        [S3 Remote State]
-        encrypted, locked
+┌───────────────────────────────────────────┐
+│               main.tf (root)              │
+│                                           │
+│  module "vpc_dev"  ──→ ./modules/vpc      │
+│    vpc_cidr     = "10.0.0.0/16"           │
+│    environment  = "dev"                   │
+│                                           │
+│  module "vpc_prod" ──→ ./modules/vpc      │
+│    vpc_cidr     = "10.1.0.0/16"           │
+│    environment  = "prod"                  │
+└───────────────────────────────────────────┘
+                    ↓
+          [S3 Remote State]
+          encrypted, locked
 ```
 
 ## Key Decisions

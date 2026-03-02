@@ -5,42 +5,43 @@ Multi-AZ AWS VPC with Auto Scaling, security monitoring, and operational documen
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                               AWS REGION                                │
-│  ┌─────────────────────────────────────────────────────────────────┐    │
-│  │                        VPC (10.0.0.0/16)                        │    │
-│  │                                                                 │    │
-│  │    ┌─────────────┐              ┌─────────────┐                 │    │
-│  │    │  Public     │              │  Public     │                 │    │
-│  │    │  Subnet     │              │  Subnet     │                 │    │
-│  │    │  AZ-a       │              │  AZ-b       │                 │    │
-│  │    │ 10.0.1.0/24 │              │ 10.0.2.0/24 │                 │    │
-│  │    │             │              │             │    ┌────────┐   │    │
-│  │    │ ┌─────────┐ │              │             │    │  IGW   │   │    │
-│  │    │ │   NAT   │ │              │             │    │        │── ┼─── ┼──► Internet
-│  │    │ │ Gateway │ │              │             │    └────────┘   │    │
-│  │    │ └────┬────┘ │              │             │                 │    │
-│  │    └──────┼──────┘              └─────────────┘                 │    │
-│  │           │                                                     │    │
-│  │    ┌──────▼──────┐              ┌─────────────┐                 │    │
-│  │    │  Private    │              │  Private    │                 │    │
-│  │    │  Subnet     │              │  Subnet     │                 │    │
-│  │    │  AZ-a       │              │  AZ-b       │                 │    │
-│  │    │ 10.0.10.0/24│              │10.0.20.0/24 │                 │    │
-│  │    │             │              │             │                 │    │
-│  │    │ ┌─────────┐ │   ◄──ASG──►  │ ┌─────────┐ │                 │    │
-│  │    │ │   EC2   │ │              │ │   EC2   │ │                 │    │
-│  │    │ │ (min:2) │ │              │ │ (max:6) │ │                 │    │
-│  │    │ └─────────┘ │              │ └─────────┘ │                 │    │
-│  │    └─────────────┘              └─────────────┘                 │    │
-│  │                                                                 │    │
-│  └─────────────────────────────────────────────────────────────────┘    │
-│                                                                         │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐               │
-│  │  GuardDuty   │    │  CloudWatch  │    │  S3 Backend  │               │
-│  │  (Threats)   │    │  (Metrics)   │    │ (TF State)   │               │
-│  └──────────────┘    └──────────────┘    └──────────────┘               │
-└─────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────┐
+│                              AWS REGION                                   │
+│                                                                           │
+│  ┌─────────────────────────────────────────────────────────────────────┐  │
+│  │                         VPC (10.0.0.0/16)                          │  │
+│  │                                                                     │  │
+│  │   ┌──────────────┐                ┌──────────────┐                  │  │
+│  │   │  Public       │                │  Public       │                  │  │
+│  │   │  Subnet       │                │  Subnet       │                  │  │
+│  │   │  AZ-a         │                │  AZ-b         │   ┌──────────┐  │  │
+│  │   │ 10.0.1.0/24   │                │ 10.0.2.0/24   │   │   IGW    │  │  │
+│  │   │               │                │               │   │          │──┼──┼──► Internet
+│  │   │  ┌──────────┐ │                │               │   └──────────┘  │  │
+│  │   │  │   NAT    │ │                │               │                  │  │
+│  │   │  │ Gateway  │ │                │               │                  │  │
+│  │   │  └─────┬────┘ │                │               │                  │  │
+│  │   └────────┼──────┘                └──────────────┘                  │  │
+│  │            │                                                         │  │
+│  │   ┌────────▼─────┐   ◄── ASG ──►  ┌──────────────┐                  │  │
+│  │   │  Private      │                │  Private       │                  │  │
+│  │   │  Subnet       │                │  Subnet       │                  │  │
+│  │   │  AZ-a         │                │  AZ-b         │                  │  │
+│  │   │ 10.0.10.0/24  │                │ 10.0.20.0/24  │                  │  │
+│  │   │               │                │               │                  │  │
+│  │   │  ┌──────────┐ │                │  ┌──────────┐ │                  │  │
+│  │   │  │   EC2    │ │                │  │   EC2    │ │                  │  │
+│  │   │  │ (min: 2) │ │                │  │ (max: 6) │ │                  │  │
+│  │   │  └──────────┘ │                │  └──────────┘ │                  │  │
+│  │   └──────────────┘                └──────────────┘                  │  │
+│  │                                                                     │  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+│                                                                           │
+│  ┌────────────────┐   ┌────────────────┐   ┌────────────────┐            │
+│  │   GuardDuty    │   │   CloudWatch   │   │  S3 Backend    │            │
+│  │   (Threats)    │   │   (Metrics)    │   │  (TF State)    │            │
+│  └────────────────┘   └────────────────┘   └────────────────┘            │
+└───────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Architecture Decisions
@@ -52,7 +53,7 @@ Every infrastructure choice in this project is documented as an Architecture Dec
 | [ADR-001](docs/adr/ADR-001-vpc-design.md) | Multi-AZ VPC with public/private subnets | Foundation for all compute and networking |
 | [ADR-002](docs/adr/ADR-002-auto-scaling.md) | Target Tracking ASG at 70% CPU, 2–6 instances | Elastic capacity without manual intervention |
 | [ADR-003](docs/adr/ADR-003-single-nat-gateway.md) | Single NAT Gateway (dev cost tradeoff) | Saves ~$32/mo; documents the HA upgrade path |
-| [ADR-004](docs/adr/ADR-004-security-first-cicd.md) | GitHub Actions: fmt → tfsec → init → validate | Security scanning with zero AWS credentials in CI |
+| [ADR-004](docs/adr/ADR-004-security-first-cicd.md) | GitHub Actions: fmt → Trivy → init → validate | Security scanning with zero AWS credentials in CI |
 | [ADR-005](docs/adr/ADR-005-remote-state.md) | S3 backend with `use_lockfile` | Remote state without DynamoDB — see [bootstrap docs](backend-setup/README.md) |
 
 ## Problem Statement

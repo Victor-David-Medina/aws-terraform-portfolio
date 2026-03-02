@@ -20,17 +20,17 @@ Workspace → CIDR mapping:
 
 ```
 terraform workspace select dev
-            ↓
-    ┌───────────────────┐
-    │  workspace_config  │
-    │  (local map)       │
-    │                   │
-    │  "dev"  → 10.1.0.0/16  │
-    │  "prod" → 10.2.0.0/16  │
-    └───────────────────┘
-            ↓
+              ↓
+    ┌──────────────────────────┐
+    │  workspace_config        │
+    │  (local map)             │
+    │                          │
+    │  "dev"  → 10.1.0.0/16   │
+    │  "prod" → 10.2.0.0/16   │
+    └──────────────────────────┘
+              ↓
     lookup(local.workspace_config, terraform.workspace)
-            ↓
+              ↓
     [VPC with workspace-specific CIDR + tags]
 ```
 

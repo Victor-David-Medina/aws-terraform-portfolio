@@ -20,19 +20,19 @@ Internet
     ↓
   [IGW]
     ↓
-┌─────────────────────────┐
-│  Public Subnet           │
-│  10.0.1.0/24            │
-│  (auto-assign public IP) │
-│  Route: 0.0.0.0/0 → IGW │
-└─────────────────────────┘
+┌────────────────────────────┐
+│  Public Subnet              │
+│  10.0.1.0/24               │
+│  (auto-assign public IP)   │
+│  Route: 0.0.0.0/0 → IGW   │
+└────────────────────────────┘
 
-┌─────────────────────────┐
-│  Private Subnet          │
-│  10.0.2.0/24            │
-│  (no internet route)     │
-│  Isolated by default     │
-└─────────────────────────┘
+┌────────────────────────────┐
+│  Private Subnet             │
+│  10.0.2.0/24               │
+│  (no internet route)       │
+│  Isolated by default       │
+└────────────────────────────┘
 
 Both inside VPC: 10.0.0.0/16
 ```
