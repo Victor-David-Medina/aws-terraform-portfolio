@@ -1,16 +1,32 @@
+# =============================================================================
 # terraform.tfvars.example
 # Copy to terraform.tfvars and customize for your environment
 #
 # Usage:
 #   cp terraform.tfvars.example terraform.tfvars
+#   # Edit terraform.tfvars with your values
 #   terraform init && terraform plan
+#
+# IMPORTANT: terraform.tfvars is gitignored — never commit real values
+# =============================================================================
 
+# --- Project ---
 project_name = "vdm-capstone"
 environment  = "dev"
 aws_region   = "us-east-1"
 
-# Network Configuration
+# --- Network ---
 vpc_cidr             = "10.0.0.0/16"
 public_subnet_cidrs  = ["10.0.1.0/24", "10.0.2.0/24"]
 private_subnet_cidrs = ["10.0.10.0/24", "10.0.20.0/24"]
 availability_zones   = ["us-east-1a", "us-east-1b"]
+
+# --- Notifications (REQUIRED — no default) ---
+alert_emails = ["your-email@example.com"]
+
+# --- Tags ---
+common_tags = {
+  Project   = "VDM-Cloud-Infrastructure"
+  ManagedBy = "Terraform"
+  Owner     = "David"
+}

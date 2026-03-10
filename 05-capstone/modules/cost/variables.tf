@@ -17,7 +17,11 @@ variable "budget_limit" {
 }
 
 variable "alert_emails" {
-  description = "Email addresses for budget alert notifications"
+  description = "Email addresses for budget alert notifications — set in terraform.tfvars"
   type        = list(string)
-  default     = ["v.davidmedina@gmail.com"]
+
+  validation {
+    condition     = length(var.alert_emails) > 0
+    error_message = "At least one alert email address is required."
+  }
 }

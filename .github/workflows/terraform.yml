@@ -6,8 +6,12 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
-  validate:
+  format:
+    name: Format Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -21,15 +25,44 @@ jobs:
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
 
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    needs: format
+    strategy:
+      matrix:
+        directory:
+          - 01-s3-bucket
+          - 02-vpc
+          - 03-modules
+          - 04-advanced-hcl
+          - 05-capstone
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.10.0"
+
+      - name: Terraform Init (${{ matrix.directory }})
+        run: terraform init -backend=false
+        working-directory: ${{ matrix.directory }}
+
+      - name: Terraform Validate (${{ matrix.directory }})
+        run: terraform validate
+        working-directory: ${{ matrix.directory }}
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: format
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Security Scan (tfsec)
         uses: aquasecurity/tfsec-action@v1.0.0
         with:
           soft_fail: true
-
-      - name: Terraform Init (Capstone)
-        run: terraform init -backend=false
-        working-directory: 05-capstone
-
-      - name: Terraform Validate (Capstone)
-        run: terraform validate
-        working-directory: 05-capstone
