@@ -27,6 +27,25 @@ resource "aws_launch_template" "app" {
   # Associate with web security group for HTTP/HTTPS access
   vpc_security_group_ids = [var.security_group_id]
 
+  # IMDSv2 required — prevents SSRF-based credential theft from instance metadata.
+  # AWS recommends enforcing IMDSv2 on all EC2 instances.
+  # See: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required" # Enforces IMDSv2 (token-based)
+    http_put_response_hop_limit = 1
+  }
+
+  # EBS encryption at rest — uses AWS-managed key (no additional cost)
+  block_device_mappings {
+    device_name = "/dev/xvda"
+    ebs {
+      encrypted   = true
+      volume_type = "gp3"
+      volume_size = 20
+    }
+  }
+
   # User data installs a basic web server for health check validation
   user_data = base64encode(<<-EOF
     #!/bin/bash

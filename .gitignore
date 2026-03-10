@@ -5,20 +5,29 @@
 *.tfplan
 crash.log
 .terraform.lock.hcl
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
 
 # Sensitive files
 *.tfvars
 !*.tfvars.example
 *.pem
 *.key
+*.env
 
 # Infracost
 .infracost/
+
+# Claude Code
+.claude/
 
 # IDE
 .vscode/
 .idea/
 *.swp
+*.swo
 
 # OS
 .DS_Store

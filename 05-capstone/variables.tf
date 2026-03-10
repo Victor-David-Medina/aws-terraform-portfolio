@@ -66,6 +66,16 @@ variable "aws_region" {
 }
 
 # -----------------------------------------------------------------------------
+# NOTIFICATIONS
+# Alert configuration for cost governance and operational notifications
+# -----------------------------------------------------------------------------
+
+variable "alert_emails" {
+  description = "Email addresses for budget and operational alert notifications — set in terraform.tfvars (not committed to version control)"
+  type        = list(string)
+}
+
+# -----------------------------------------------------------------------------
 # TAGGING
 # Standard tags applied to all resources for cost tracking and organization
 # -----------------------------------------------------------------------------

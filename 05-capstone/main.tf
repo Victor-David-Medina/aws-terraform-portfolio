@@ -5,41 +5,9 @@
 # This is the root module that composes all infrastructure components.
 # Each module handles a specific concern: networking, security, compute,
 # monitoring, threat detection, and cost governance.
+#
+# Provider and backend configuration: see providers.tf
 # =============================================================================
-
-terraform {
-  required_version = ">= 1.10.0"
-
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
-  }
-
-  # ---------------------------------------------------------------------------
-  # Remote State — S3 Backend (see ADR-005: docs/adr/ADR-005-remote-state.md)
-  #
-  # The S3 bucket is created by backend-setup/. You must bootstrap it first:
-  #   cd backend-setup && terraform init && terraform apply && cd ..
-  #
-  # Then uncomment the block below and run:
-  #   terraform init -migrate-state
-  #
-  # uses use_lockfile (Terraform 1.10+) instead of DynamoDB for state locking.
-  # See backend-setup/README.md for the full bootstrap walkthrough.
-  # ---------------------------------------------------------------------------
-  # backend "s3" {
-  #   bucket       = "vdm-terraform-state"
-  #   key          = "capstone/terraform.tfstate"
-  #   region       = "us-east-1"
-  #   use_lockfile = true
-  # }
-}
-
-provider "aws" {
-  region = var.aws_region
-}
 
 # -----------------------------------------------------------------------------
 # NETWORKING
@@ -114,4 +82,5 @@ module "cost" {
 
   project_name = var.project_name
   environment  = var.environment
+  alert_emails = var.alert_emails
 }
