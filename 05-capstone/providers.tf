@@ -14,7 +14,7 @@ terraform {
   }
 
   # ---------------------------------------------------------------------------
-  # Remote State — S3 Backend (see ADR-005: docs/adr/ADR-005-remote-state.md)
+  # Remote State - S3 Backend (see ADR-005: docs/adr/ADR-005-remote-state.md)
   #
   # The S3 bucket is created by backend-setup/. You must bootstrap it first:
   #   cd backend-setup && terraform init && terraform apply && cd ..

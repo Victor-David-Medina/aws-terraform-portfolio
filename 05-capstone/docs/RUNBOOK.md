@@ -9,9 +9,9 @@ Deployment procedures, troubleshooting guides, and incident playbooks for the ca
 ## Table of Contents
 
 1. [Initial Deployment](#initial-deployment)
-2. [Troubleshooting — Common Issues](#troubleshooting)
+2. [Troubleshooting - Common Issues](#troubleshooting)
 3. [Incident Procedures](#incident-procedures)
-   - [ASG Not Scaling — 0 Healthy Instances](#incident-asg-not-scaling--0-healthy-instances)
+   - [ASG Not Scaling - 0 Healthy Instances](#incident-asg-not-scaling--0-healthy-instances)
    - [CloudWatch Alarm Fired](#incident-cloudwatch-alarm-fired)
    - [GuardDuty Finding Appeared](#incident-guardduty-finding-appeared)
    - [Budget Alert Threshold Breached](#incident-budget-alert-threshold-breached)
@@ -63,7 +63,7 @@ aws ec2 describe-nat-gateways \
   --filter "Name=state,Values=available,failed,deleted" \
   --query "NatGateways[].{ID:NatGatewayId,State:State,Subnet:SubnetId}" --output table
 
-# 2. Check private subnet route tables have 0.0.0.0/0 → NAT GW
+# 2. Check private subnet route tables have 0.0.0.0/0 > NAT GW
 aws ec2 describe-route-tables \
   --filters "Name=tag:Project,Values=vdm-capstone" \
   --query "RouteTables[].{ID:RouteTableId,Routes:Routes[?DestinationCidrBlock=='0.0.0.0/0'].{Target:NatGatewayId,State:State}}" \
@@ -92,11 +92,11 @@ terraform force-unlock LOCK_ID
 
 ## Incident Procedures
 
-### Incident: ASG Not Scaling — 0 Healthy Instances
+### Incident: ASG Not Scaling - 0 Healthy Instances
 
 **Symptoms:** CloudWatch alarm `CPUUtilization` shows no data. Application is unreachable. ASG shows 0 InService instances. PagerDuty/email alert for unhealthy target group.
 
-**Severity:** SEV-1 — Complete service outage. All instances are down.
+**Severity:** SEV-1 - Complete service outage. All instances are down.
 
 **Diagnosis:**
 
@@ -153,14 +153,14 @@ terraform force-unlock LOCK_ID
 
 **Resolution:**
 
-1. If AMI is deregistered → Update launch template with current Amazon Linux 2023 AMI:
+1. If AMI is deregistered: Update launch template with current Amazon Linux 2023 AMI:
    ```bash
    aws ssm get-parameter --name "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64" \
      --query "Parameter.Value" --output text
    ```
-2. If subnet is full → This shouldn't happen with /24 subnets (251 IPs). Check for leaked ENIs.
-3. If IAM profile is missing → Run `terraform apply` to recreate it.
-4. If security group blocks health checks → Run `terraform apply` to restore rules.
+2. If subnet is full: This shouldn't happen with /24 subnets (251 IPs). Check for leaked ENIs.
+3. If IAM profile is missing: Run `terraform apply` to recreate it.
+4. If security group blocks health checks: Run `terraform apply` to restore rules.
 
 **Verification:**
 ```bash
@@ -170,7 +170,7 @@ aws autoscaling describe-auto-scaling-groups \
   --output table
 ```
 
-**Escalation:** If instances keep launching and immediately terminating (launch-terminate loop for >10 minutes), check CloudTrail for permission errors and escalate to the team lead. Do not increase `max_size` — the problem is upstream.
+**Escalation:** If instances keep launching and immediately terminating (launch-terminate loop for >10 minutes), check CloudTrail for permission errors and escalate to the team lead. Do not increase `max_size` - the problem is upstream.
 
 ---
 
@@ -178,7 +178,7 @@ aws autoscaling describe-auto-scaling-groups \
 
 **Symptoms:** Email or SNS notification from CloudWatch. Alarm name contains `vdm-capstone`. Alarm state changed to `ALARM`.
 
-**Severity:** SEV-2 — Degraded performance. Service is running but a threshold was breached.
+**Severity:** SEV-2 - Degraded performance. Service is running but a threshold was breached.
 
 **Diagnosis:**
 
@@ -224,9 +224,9 @@ aws autoscaling describe-auto-scaling-groups \
 
 **Resolution:**
 
-1. If CPU alarm and ASG is already scaling → **No action needed.** The Target Tracking policy (70% threshold, see ADR-002) handles this automatically. Monitor for 5 minutes.
-2. If CPU alarm and ASG is NOT scaling → Check if desired capacity already equals max (6). If yes, the load exceeds current capacity limits.
-3. If alarm is non-CPU (custom metric) → Investigate the specific metric. Check the alarm's `MetricName` from step 1.
+1. If CPU alarm and ASG is already scaling: **No action needed.** The Target Tracking policy (70% threshold, see ADR-002) handles this automatically. Monitor for 5 minutes.
+2. If CPU alarm and ASG is NOT scaling: Check if desired capacity already equals max (6). If yes, the load exceeds current capacity limits.
+3. If alarm is non-CPU (custom metric): Investigate the specific metric. Check the alarm's `MetricName` from step 1.
 
 **Verification:**
 ```bash
@@ -244,7 +244,7 @@ aws cloudwatch describe-alarms \
 
 **Symptoms:** GuardDuty email notification or AWS console alert. Finding severity may be LOW, MEDIUM, or HIGH.
 
-**Severity:** Depends on finding severity — SEV-3 for LOW/MEDIUM, SEV-1 for HIGH/CRITICAL.
+**Severity:** Depends on finding severity - SEV-3 for LOW/MEDIUM, SEV-1 for HIGH/CRITICAL.
 
 **Diagnosis:**
 
@@ -274,7 +274,7 @@ aws cloudwatch describe-alarms \
      --output table
    ```
 
-4. If HIGH severity — check VPC Flow Logs for suspicious traffic from the affected instance:
+4. If HIGH severity - check VPC Flow Logs for suspicious traffic from the affected instance:
    ```bash
    aws ec2 describe-flow-logs \
      --filter "Name=resource-id,Values=<VPC_ID>" \
@@ -301,7 +301,7 @@ aws cloudwatch describe-alarms \
      --groups "$ISOLATION_SG"
    ```
 
-3. Do NOT terminate the instance — it's evidence. The ASG will launch a clean replacement automatically.
+3. Do NOT terminate the instance - it's evidence. The ASG will launch a clean replacement automatically.
 
 **Verification:**
 ```bash
@@ -315,7 +315,7 @@ aws autoscaling describe-auto-scaling-groups \
   --output table
 ```
 
-**Escalation:** Any HIGH severity finding must be reported to the team lead immediately, even at 3 AM. If the finding type contains `CryptoCurrency`, `Trojan`, or `Backdoor`, treat as SEV-1 and begin full incident response — the instance may be compromised.
+**Escalation:** Any HIGH severity finding must be reported to the team lead immediately, even at 3 AM. If the finding type contains `CryptoCurrency`, `Trojan`, or `Backdoor`, treat as SEV-1 and begin full incident response - the instance may be compromised.
 
 ---
 
@@ -323,7 +323,7 @@ aws autoscaling describe-auto-scaling-groups \
 
 **Symptoms:** AWS Budget email notification. Monthly spend has exceeded a defined threshold (typically 80% or 100% of the $75 budget).
 
-**Severity:** SEV-4 — No service impact, but requires investigation to prevent runaway costs.
+**Severity:** SEV-4 - No service impact, but requires investigation to prevent runaway costs.
 
 **Diagnosis:**
 
@@ -358,7 +358,7 @@ aws autoscaling describe-auto-scaling-groups \
      --query "Volumes[].{ID:VolumeId,Size:Size,Created:CreateTime}" \
      --output table
 
-   # NAT Gateway (biggest single cost — ~$32/mo)
+   # NAT Gateway (biggest single cost - ~$32/mo)
    aws ec2 describe-nat-gateways \
      --filter "Name=state,Values=available" \
      --query "NatGateways[].{ID:NatGatewayId,State:State,Created:CreateTime}" \
@@ -376,8 +376,8 @@ aws autoscaling describe-auto-scaling-groups \
 
 1. Release orphaned EIPs: `aws ec2 release-address --allocation-id <ALLOC_ID>`
 2. Delete orphaned EBS volumes: `aws ec2 delete-volume --volume-id <VOL_ID>`
-3. If ASG is scaled to max without load → Check if the scaling policy is misfiring. Review the Target Tracking policy's metric.
-4. If costs are expected (legitimate usage) → Adjust the budget threshold or acknowledge the alert.
+3. If ASG is scaled to max without load: Check if the scaling policy is misfiring. Review the Target Tracking policy's metric.
+4. If costs are expected (legitimate usage): Adjust the budget threshold or acknowledge the alert.
 
 **Verification:**
 ```bash
@@ -396,7 +396,7 @@ aws ce get-cost-forecast \
 
 **Symptoms:** GitHub Actions workflow shows red ✗ on the PR. Pipeline failed at one of the 4 stages: fmt, tfsec, init, or validate.
 
-**Severity:** SEV-3 — No production impact (pipeline runs with `-backend=false` and no AWS credentials, see ADR-004). Blocks the PR from merging.
+**Severity:** SEV-3 - No production impact (pipeline runs with `-backend=false` and no AWS credentials, see ADR-004). Blocks the PR from merging.
 
 **Diagnosis:**
 
@@ -463,7 +463,7 @@ gh run list --limit 1 --json status,conclusion,name
 # Or check: https://github.com/Victor-David-Medina/aws-terraform-portfolio/actions
 ```
 
-**Escalation:** Pipeline failures don't affect production and can wait until business hours. Escalate only if `terraform init` fails consistently across all branches (may indicate a GitHub Actions or Terraform Registry outage — check https://status.hashicorp.com).
+**Escalation:** Pipeline failures don't affect production and can wait until business hours. Escalate only if `terraform init` fails consistently across all branches (may indicate a GitHub Actions or Terraform Registry outage - check https://status.hashicorp.com).
 
 ---
 

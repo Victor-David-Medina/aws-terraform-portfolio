@@ -50,10 +50,10 @@ Every infrastructure choice in this project is documented as an Architecture Dec
 | ADR | Decision | Why It Matters |
 |-----|----------|---------------|
 | [ADR-001](docs/adr/ADR-001-vpc-design.md) | Multi-AZ VPC with public/private subnets | Foundation for all compute and networking |
-| [ADR-002](docs/adr/ADR-002-auto-scaling.md) | Target Tracking ASG at 70% CPU, 2–6 instances | Elastic capacity without manual intervention |
+| [ADR-002](docs/adr/ADR-002-auto-scaling.md) | Target Tracking ASG at 70% CPU, 2-6 instances | Elastic capacity without manual intervention |
 | [ADR-003](docs/adr/ADR-003-single-nat-gateway.md) | Single NAT Gateway (dev cost tradeoff) | Saves ~$32/mo; documents the HA upgrade path |
-| [ADR-004](docs/adr/ADR-004-security-first-cicd.md) | GitHub Actions: fmt → tfsec → init → validate | Security scanning with zero AWS credentials in CI |
-| [ADR-005](docs/adr/ADR-005-remote-state.md) | S3 backend with `use_lockfile` | Remote state without DynamoDB — see [bootstrap docs](backend-setup/README.md) |
+| [ADR-004](docs/adr/ADR-004-security-first-cicd.md) | GitHub Actions: fmt, tfsec, init, validate | Security scanning with zero AWS credentials in CI |
+| [ADR-005](docs/adr/ADR-005-remote-state.md) | S3 backend with `use_lockfile` | Remote state without DynamoDB (see [bootstrap docs](../../backend-setup/README.md)) |
 
 ## Problem Statement
 
@@ -90,6 +90,6 @@ terraform apply
 
 ## Documentation
 
-- [RUNBOOK.md](docs/RUNBOOK.md) — Deployment and troubleshooting
-- [Architecture Decision Records](docs/adr/README.md) — All 5 ADRs with rationale and cost analysis
-- [Backend Bootstrap](backend-setup/README.md) — Remote state setup guide
+- [RUNBOOK.md](docs/RUNBOOK.md) - Deployment and troubleshooting
+- [Architecture Decision Records](docs/adr/README.md) - All 5 ADRs with rationale and cost analysis
+- [Backend Bootstrap](../../backend-setup/README.md) - Remote state setup guide

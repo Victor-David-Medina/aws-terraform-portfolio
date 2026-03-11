@@ -17,7 +17,7 @@ variable "budget_limit" {
 }
 
 variable "alert_emails" {
-  description = "Email addresses for budget alert notifications — set in terraform.tfvars"
+  description = "Email addresses for budget alert notifications - set in terraform.tfvars"
   type        = list(string)
 
   validation {

@@ -71,7 +71,7 @@ variable "aws_region" {
 # -----------------------------------------------------------------------------
 
 variable "alert_emails" {
-  description = "Email addresses for budget and operational alert notifications — set in terraform.tfvars (not committed to version control)"
+  description = "Email addresses for budget and operational alert notifications - set in terraform.tfvars (not committed to version control)"
   type        = list(string)
 }
 

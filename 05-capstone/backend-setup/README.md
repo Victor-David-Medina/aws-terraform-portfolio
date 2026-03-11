@@ -1,4 +1,4 @@
-# Backend Bootstrap — Remote State Setup
+# Backend Bootstrap - Remote State Setup
 
 This directory creates the S3 bucket that stores Terraform state for the capstone project. It exists as a separate root module because of the **chicken-and-egg problem**: the capstone's `backend "s3"` block needs the bucket to already exist before `terraform init` can connect to it.
 
@@ -33,7 +33,7 @@ Terraform will show the bucket name and ARN. Confirm with `yes`.
 
 ### 2. Enable the backend in the capstone
 
-Open `05-capstone/main.tf` and uncomment the backend block:
+Open `05-capstone/providers.tf` and uncomment the backend block:
 
 ```hcl
 backend "s3" {
@@ -85,4 +85,4 @@ Destroying the bucket first would orphan the capstone's state file and make `ter
 |---------|-------|-----|
 | `Error: Failed to get existing workspaces` | Backend block uncommented before bucket exists | Run `backend-setup/terraform apply` first |
 | `Error: state lock` | Another `terraform apply` is running | Wait for it to finish, or check for stale `.tflock` in S3 |
-| `BucketAlreadyOwnedByYou` | Bucket was already created | Safe to ignore — `terraform apply` will show no changes |
+| `BucketAlreadyOwnedByYou` | Bucket was already created | Safe to ignore - `terraform apply` will show no changes |

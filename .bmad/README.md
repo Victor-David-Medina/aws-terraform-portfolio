@@ -1,4 +1,4 @@
-# BMAD Methodology — VDM Cloud Infrastructure
+# BMAD Methodology - VDM Cloud Infrastructure
 
 This directory contains the BMAD (BMad Agent-Driven) methodology configuration
 for AI-assisted infrastructure development on this portfolio project.
@@ -28,9 +28,9 @@ for AI-assisted infrastructure development on this portfolio project.
 When working on infrastructure changes, activate the relevant agent to get
 focused guidance:
 
-- Making architecture changes? → `infra-architect`
-- Modifying security rules? → `security-reviewer`
-- Updating monitoring or runbooks? → `ops-engineer`
+- Making architecture changes? `infra-architect`
+- Modifying security rules? `security-reviewer`
+- Updating monitoring or runbooks? `ops-engineer`
 
 **Skills** are reusable procedures that agents invoke. They provide step-by-step
 evaluation criteria with concrete pass/fail checks.

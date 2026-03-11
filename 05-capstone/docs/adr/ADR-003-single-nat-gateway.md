@@ -19,34 +19,34 @@ We deploy a **single NAT Gateway in the first public subnet (us-east-1a)** with 
 |--------------|-------|
 | NAT Gateway count | 1 |
 | Placement | Public subnet, us-east-1a |
-| Route | Both private subnets → single NAT GW |
+| Route | Both private subnets > single NAT GW |
 | Elastic IP | 1 (required per NAT GW) |
 
 This is an explicit cost-optimization decision for a dev/portfolio environment, not a production recommendation. The README and this ADR document what production would require.
 
 ## Alternatives Considered
 
-- **NAT Gateway per AZ (HA pattern)** — One NAT GW in each public subnet. Each private subnet routes to its local-AZ NAT GW. This is the AWS-recommended production pattern because it eliminates the cross-AZ single point of failure. Rejected for this project because it doubles the NAT cost from ~$32/mo to ~$64/mo with no functional benefit for a portfolio demo. Documented as the production upgrade path.
+- **NAT Gateway per AZ (HA pattern)** - One NAT GW in each public subnet. Each private subnet routes to its local-AZ NAT GW. This is the AWS-recommended production pattern because it eliminates the cross-AZ single point of failure. Rejected for this project because it doubles the NAT cost from ~$32/mo to ~$64/mo with no functional benefit for a portfolio demo. Documented as the production upgrade path.
 
-- **NAT Instance (t3.nano)** — A self-managed EC2 instance with source/dest check disabled, acting as a NAT device. Costs ~$3/mo vs $32/mo for a managed gateway. Rejected because NAT Instances require patching, monitoring, and manual failover — operational burden that contradicts the "managed services" philosophy. Also, NAT Instances have bandwidth limits tied to instance type.
+- **NAT Instance (t3.nano)** - A self-managed EC2 instance with source/dest check disabled, acting as a NAT device. Costs ~$3/mo vs $32/mo for a managed gateway. Rejected because NAT Instances require patching, monitoring, and manual failover - operational burden that contradicts the "managed services" philosophy. Also, NAT Instances have bandwidth limits tied to instance type.
 
-- **VPC Endpoints only (no NAT)** — Use Gateway Endpoints for S3/DynamoDB and Interface Endpoints for other services. Eliminates NAT entirely. Rejected because Interface Endpoints cost $0.01/hour each (~$7/mo per service) and we'd need multiple (CloudWatch, SSM, EC2 API). Total cost would exceed a single NAT GW. Also, not all services support VPC Endpoints.
+- **VPC Endpoints only (no NAT)** - Use Gateway Endpoints for S3/DynamoDB and Interface Endpoints for other services. Eliminates NAT entirely. Rejected because Interface Endpoints cost $0.01/hour each (~$7/mo per service) and we'd need multiple (CloudWatch, SSM, EC2 API). Total cost would exceed a single NAT GW. Also, not all services support VPC Endpoints.
 
-- **No outbound internet (fully isolated)** — Lock private subnets to AWS-internal traffic only. Rejected because instances need to pull OS updates, the CloudWatch agent needs to push metrics, and SSM needs connectivity for Session Manager. Full isolation requires VPC Endpoints for every service, which is more expensive and complex.
+- **No outbound internet (fully isolated)** - Lock private subnets to AWS-internal traffic only. Rejected because instances need to pull OS updates, the CloudWatch agent needs to push metrics, and SSM needs connectivity for Session Manager. Full isolation requires VPC Endpoints for every service, which is more expensive and complex.
 
 ## Consequences
 
 **Positive:**
 - Saves ~$32/mo compared to HA NAT (one gateway vs two)
-- Simpler routing — one NAT GW, one Elastic IP, two route table entries
+- Simpler routing - one NAT GW, one Elastic IP, two route table entries
 - Demonstrates awareness of cost vs availability tradeoffs (interviewers love this)
 - Easy upgrade path: add a second NAT GW and update the us-east-1b route table
 
 **Negative:**
-- **Single point of failure** — if us-east-1a has an AZ outage, private subnet instances in us-east-1b lose internet access
+- **Single point of failure** - if us-east-1a has an AZ outage, private subnet instances in us-east-1b lose internet access
 - Cross-AZ data transfer from us-east-1b private subnet to us-east-1a NAT GW costs $0.01/GB
 - During AZ failure: instances stay running but can't reach external APIs, pull updates, or push CloudWatch metrics
-- This is the most common "gotcha" in AWS interviews — you will be asked about it
+- This is the most common "gotcha" in AWS interviews - you will be asked about it
 
 **Operational:**
 - If private instances suddenly can't reach the internet, check NAT Gateway status in us-east-1a first. If the AZ is impaired, AWS will report it on the Service Health Dashboard.
