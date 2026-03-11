@@ -21,7 +21,7 @@ For each security group:
 - [ ] Every egress rule has a `description` field
 - [ ] `0.0.0.0/0` ingress rules are justified and documented in SECURITY-DECISIONS.md
 - [ ] Inter-tier rules use security group IDs (chaining), not CIDRs
-- [ ] No SSH (port 22) rules — SSM Session Manager required
+- [ ] No SSH (port 22) rules - SSM Session Manager required
 - [ ] No overly broad port ranges (e.g., 0-65535)
 
 #### VPC Design

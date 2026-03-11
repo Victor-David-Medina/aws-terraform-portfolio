@@ -1,6 +1,6 @@
-# Phase 03: Modules — DRY Infrastructure with Reusable Components
+# Phase 03: Modules - DRY Infrastructure with Reusable Components
 
-> **Problem:** Copy-pasting VPC configs for every environment creates drift and maintenance nightmares. You need one module, multiple deployments.
+> **Problem:** Copy-pasting VPC configs for every environment creates drift and maintenance nightmares. You need one module with multiple deployments.
 
 ## What This Deploys
 
@@ -31,22 +31,22 @@
 
 ## Key Decisions
 
-- **Module pattern** — same VPC code deploys dev and prod with different CIDRs. Change the module once, both environments update
-- **`cidrsubnet()` in the module** — calculates subnet CIDRs mathematically instead of hardcoding. `cidrsubnet("10.0.0.0/16", 8, 1)` = `10.0.1.0/24`
-- **S3 backend with `use_lockfile`** — remote state prevents "it works on my machine" and locking prevents two engineers from running `apply` simultaneously
-- **Environment tags from variables** — every resource knows if it's dev or prod. This drives IAM policies, cost reports, and incident triage
+- **Module pattern** so the same VPC code deploys dev and prod with different CIDRs. Change the module once, both environments update.
+- **`cidrsubnet()` in the module** calculates subnet CIDRs mathematically instead of hardcoding. `cidrsubnet("10.0.0.0/16", 8, 1)` = `10.0.1.0/24`.
+- **S3 backend with `use_lockfile`** for remote state that prevents "it works on my machine" problems, and locking that prevents two engineers from running `apply` at the same time.
+- **Environment tags from variables** so every resource knows if it's dev or prod. Useful for IAM policies, cost reports, and incident triage.
 
 ## What I Learned
 
-1. **Modules are functions for infrastructure** — inputs (variables), processing (resources), outputs. The same mental model from programming applies. One VPC module, two calls, two completely isolated networks
-2. **Remote state is non-negotiable for teams** — local `.tfstate` files work solo but break the moment a second person touches the project. S3 + locking is the standard
-3. **`cidrsubnet()` eliminates CIDR math errors** — instead of manually calculating `10.0.1.0/24`, `10.0.2.0/24`, let Terraform do it. Fewer typos, consistent subnetting across environments
+1. **Modules are functions for infrastructure.** Inputs (variables), processing (resources), outputs. The same mental model from programming applies. One VPC module, two calls, two completely isolated networks.
+2. **Remote state is non-negotiable for teams.** Local `.tfstate` files work solo but break the moment a second person touches the project. S3 + locking is the standard.
+3. **`cidrsubnet()` eliminates CIDR math errors.** Instead of manually calculating `10.0.1.0/24`, `10.0.2.0/24`, let Terraform do it. Fewer typos, consistent subnetting across environments.
 
 ## File Structure
 
 ```
 03-modules/
-├── main.tf              # Root — calls vpc module twice (dev + prod)
+├── main.tf              # Root - calls vpc module twice (dev + prod)
 ├── outputs.tf           # Exposes module outputs
 └── modules/
     └── vpc/
@@ -58,13 +58,13 @@
 ```bash
 cd 03-modules
 
-# Initialize — downloads provider + configures S3 backend
+# Initialize (downloads provider + configures S3 backend)
 terraform init
 
-# Preview — shows dev AND prod VPC resources
+# Preview (shows dev AND prod VPC resources)
 terraform plan
 
-# Deploy — creates both VPCs in one apply
+# Deploy (creates both VPCs in one apply)
 terraform apply
 
 # Verify both environments exist
@@ -81,4 +81,4 @@ terraform destroy
 
 ---
 
-📂 **Previous:** [02-vpc](../02-vpc) | **Next:** [04-advanced-hcl](../04-advanced-hcl) — Workspaces and dynamic configuration
+📂 **Previous:** [02-vpc](../02-vpc) | **Next:** [04-advanced-hcl](../04-advanced-hcl) - Workspaces and dynamic configuration

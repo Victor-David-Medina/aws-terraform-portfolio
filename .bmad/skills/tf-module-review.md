@@ -15,9 +15,9 @@ and documentation.
 
 ### 1. File Structure Check
 Verify the module contains the standard files:
-- [ ] `main.tf` — Resource definitions
-- [ ] `variables.tf` — Input variable declarations
-- [ ] `outputs.tf` — Output value declarations
+- [ ] `main.tf` - Resource definitions
+- [ ] `variables.tf` - Input variable declarations
+- [ ] `outputs.tf` - Output value declarations
 
 Flag any additional files and confirm they serve a clear purpose.
 

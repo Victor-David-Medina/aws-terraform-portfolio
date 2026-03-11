@@ -19,7 +19,7 @@ posture appropriate for its environment (dev/staging/prod).
 ## Standards
 
 ### Network Security
-- No SSH ports open — SSM Session Manager only (zero-trust access)
+- No SSH ports open - SSM Session Manager only (zero-trust access)
 - Security group chaining: DB tier trusts web SG ID, not CIDR blocks
 - Private subnets have no public IP assignment
 - NAT Gateway provides outbound-only internet for private resources

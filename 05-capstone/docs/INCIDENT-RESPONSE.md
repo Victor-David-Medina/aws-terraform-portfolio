@@ -1,6 +1,6 @@
 # Incident Response Procedure
 
-How this team detects, triages, mitigates, resolves, and documents incidents. Follows the Detect → Triage → Mitigate → Resolve → Document lifecycle used by cloud operations teams at scale.
+How this team detects, triages, mitigates, resolves, and documents incidents. Follows the Detect > Triage > Mitigate > Resolve > Document lifecycle used by cloud operations teams at scale.
 
 ---
 
@@ -21,7 +21,7 @@ How this team detects, triages, mitigates, resolves, and documents incidents. Fo
 
 ### Phase 1: Detect
 
-**What happens:** Something triggers an alert — a CloudWatch alarm, GuardDuty finding, budget notification, or a human noticing degraded behavior.
+**What happens:** Something triggers an alert - a CloudWatch alarm, GuardDuty finding, budget notification, or a human noticing degraded behavior.
 
 **Who:** Monitoring systems (automated) or on-call engineer (manual observation).
 
@@ -36,9 +36,9 @@ How this team detects, triages, mitigates, resolves, and documents incidents. Fo
 **Who:** On-call engineer.
 
 **Key questions:**
-- Is the service down or degraded? → Sets severity level
-- Which component? → VPC, ASG, NAT, GuardDuty, CI/CD, or cost
-- Is this getting worse? → Determines urgency of mitigation
+- Is the service down or degraded? Sets severity level
+- Which component? VPC, ASG, NAT, GuardDuty, CI/CD, or cost
+- Is this getting worse? Determines urgency of mitigation
 
 **Output:** Severity assignment and a one-line problem statement (e.g., "SEV-2: ASG stuck at max capacity, CPU at 95% for 20 minutes").
 
@@ -49,10 +49,10 @@ How this team detects, triages, mitigates, resolves, and documents incidents. Fo
 **Who:** On-call engineer. Escalate if mitigation isn't working within 15 minutes.
 
 **Common mitigations:**
-- ASG issues → Check launch template, verify subnet capacity, confirm IAM profile
-- GuardDuty HIGH → Isolate the instance (swap to empty SG), let ASG replace it
-- Cost spike → Identify and terminate orphaned resources
-- CI/CD → Failures don't affect production; fix on next push
+- ASG issues: Check launch template, verify subnet capacity, confirm IAM profile
+- GuardDuty HIGH: Isolate the instance (swap to empty SG), let ASG replace it
+- Cost spike: Identify and terminate orphaned resources
+- CI/CD: Failures don't affect production; fix on next push
 
 **Output:** Service restored (even if temporarily). Document what you did.
 
@@ -68,7 +68,7 @@ How this team detects, triages, mitigates, resolves, and documents incidents. Fo
 
 ### Phase 5: Document
 
-**What happens:** Write the post-incident review within 48 hours. This is blameless — we document what the system did, not who made a mistake.
+**What happens:** Write the post-incident review within 48 hours. This is blameless - we document what the system did, not who made a mistake.
 
 **Who:** Incident lead (whoever triaged the incident).
 
@@ -81,14 +81,14 @@ How this team detects, triages, mitigates, resolves, and documents incidents. Fo
 Use this format for all incident updates (Slack, email, or status page):
 
 ```
-INCIDENT UPDATE — [SEV-X] [Component]
+INCIDENT UPDATE - [SEV-X] [Component]
 WHAT: [One sentence describing the issue]
 WHO:  [Which users/services are affected]
 DOING: [What we are doing right now]
 NEXT: [When the next update will be posted]
 
 Example:
-INCIDENT UPDATE — SEV-2 ASG
+INCIDENT UPDATE - SEV-2 ASG
 WHAT: Auto Scaling Group stuck at max capacity (6/6), CPU sustained at 92%.
 WHO:  All application users experiencing slow response times.
 DOING: Investigating whether a traffic spike or a runaway process is driving load.
@@ -118,10 +118,10 @@ Lead: [Name]
 | HH:MM | Root cause identified: [description] |
 
 ## What Went Well
-- [Specific thing that helped — fast detection, good runbook, etc.]
+- [Specific thing that helped - fast detection, good runbook, etc.]
 
 ## What To Improve
-- [Specific gap — missing alarm, unclear runbook step, slow detection]
+- [Specific gap - missing alarm, unclear runbook step, slow detection]
 
 ## Action Items
 | Action | Owner | Due Date | Status |
@@ -143,4 +143,4 @@ Lead: [Name]
 | You're unsure of the severity | Escalate. "I paged you because I wasn't sure" is always acceptable. |
 | Cost >150% of budget with unknown source | Escalate. Consider emergency teardown of non-critical resources. |
 
-**How to escalate:** Include these three things: (1) what's broken, (2) what you've tried, (3) what you need. Don't just say "help" — give the next person a running start.
+**How to escalate:** Include these three things: (1) what's broken, (2) what you've tried, (3) what you need. Don't just say "help" - give the next person a running start.

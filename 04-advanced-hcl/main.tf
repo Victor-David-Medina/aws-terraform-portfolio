@@ -1,5 +1,5 @@
 # 04-advanced-hcl/main.tf
-# COMPLETE FILE — workspaces example
+# COMPLETE FILE - workspaces example
 
 terraform {
   required_providers {

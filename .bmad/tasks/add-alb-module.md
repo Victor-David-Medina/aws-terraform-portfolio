@@ -28,13 +28,13 @@ in public subnets, with a target group pointing at the ASG instances.
 
 ## Agent
 
-`infra-architect` — for module design and ADR authoring
+`infra-architect` - for module design and ADR authoring
 
 ## Skills
 
-- `tf-module-review` — validate module quality
-- `security-audit` — validate SG changes
-- `cost-review` — validate cost impact
+- `tf-module-review` - validate module quality
+- `security-audit` - validate SG changes
+- `cost-review` - validate cost impact
 
 ## Dependencies
 

@@ -1,8 +1,8 @@
-# CLAUDE.md — Project Guidance for Claude Code
+# CLAUDE.md - Project Guidance for Claude Code
 
 ## Project Overview
 
-AWS Terraform Portfolio by Victor David Medina — production-grade AWS infrastructure
+AWS Terraform Portfolio by Victor David Medina - production-grade AWS infrastructure
 built with Terraform, showcasing multi-AZ VPC architecture, Auto Scaling, GuardDuty,
 and comprehensive operational documentation. This is a portfolio project that
 demonstrates Day-2 operations thinking for cloud/SRE roles.
@@ -53,26 +53,26 @@ cd 05-capstone && terraform plan
 - **Tagging**: Always use `merge(var.common_tags, { ... })` for consistent tagging
 - **Variables**: Every variable must have a `description` and `type`
 - **Validation**: Use `validation` blocks on variables that accept constrained values
-- **Comments**: Document the "why" not the "what" — reference ADRs and security docs
+- **Comments**: Document the "why" not the "what" - reference ADRs and security docs
 - **Modules**: One concern per module, consistent file structure (main.tf, variables.tf, outputs.tf)
 
 ### Security Posture
-- No SSH — use SSM Session Manager (zero-trust access)
-- Security group chaining between tiers (web SG → db SG)
+- No SSH - use SSM Session Manager (zero-trust access)
+- Security group chaining between tiers (web SG > db SG)
 - Private subnets for all application workloads
 - All security decisions documented in `05-capstone/docs/SECURITY-DECISIONS.md`
 - Never commit `.tfvars` files (they may contain sensitive values)
 
 ### Documentation Standards
-- ADRs follow: Context → Decision → Alternatives → Consequences → Cost
-- Runbook entries follow: Symptoms → Severity → Diagnosis → Resolution → Verification
+- ADRs follow: Context > Decision > Alternatives > Consequences > Cost
+- Runbook entries follow: Symptoms > Severity > Diagnosis > Resolution > Verification
 - Every infrastructure decision should reference an ADR when applicable
 
 ### CI/CD
 - `terraform fmt -check -recursive` on every push
 - `tfsec` security scanning on every push
 - `terraform validate` on capstone module
-- No AWS credentials in CI — validation only
+- No AWS credentials in CI - validation only
 
 ## BMAD Methodology
 
@@ -94,5 +94,5 @@ infrastructure work on this portfolio.
 
 - Phases 01-04 are learning exercises; Phase 05 (capstone) is the production reference
 - The S3 backend block in `05-capstone/main.tf` is intentionally commented out for portability
-- Email addresses in `terraform.tfvars.example` are placeholders — real values go in `.tfvars` (gitignored)
-- This is a portfolio project — some production features (ALB, multi-NAT) are documented but not deployed to control costs
+- Email addresses in `terraform.tfvars.example` are placeholders - real values go in `.tfvars` (gitignored)
+- This is a portfolio project - some production features (ALB, multi-NAT) are documented but not deployed to control costs

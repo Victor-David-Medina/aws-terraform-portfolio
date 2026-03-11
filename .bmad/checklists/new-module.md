@@ -17,7 +17,7 @@ Use this checklist when adding a new module to the capstone project.
 - [ ] All resources tagged with `merge(var.common_tags, {...})` pattern
 - [ ] Tags include: Name, Environment, Project, ManagedBy, Component
 - [ ] Comments explain "why" with references to ADRs or security docs
-- [ ] No hardcoded values — use variables or data sources
+- [ ] No hardcoded values - use variables or data sources
 - [ ] `depends_on` only where implicit dependencies are insufficient
 
 ## Integration

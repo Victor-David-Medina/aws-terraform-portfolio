@@ -36,6 +36,11 @@ variable "max_size" {
   description = "Maximum instances - cost cap for demo environment"
   type        = number
   default     = 6
+
+  validation {
+    condition     = var.max_size >= 1
+    error_message = "max_size must be at least 1."
+  }
 }
 
 variable "desired_capacity" {
@@ -48,4 +53,9 @@ variable "target_cpu" {
   description = "CPU utilization target for auto scaling (percent)"
   type        = number
   default     = 70.0
+
+  validation {
+    condition     = var.target_cpu > 0 && var.target_cpu <= 100
+    error_message = "target_cpu must be between 1 and 100."
+  }
 }

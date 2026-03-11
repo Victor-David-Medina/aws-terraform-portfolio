@@ -1,4 +1,4 @@
-# terraform.tfvars.example — Phase 01: S3 State Bucket
+# terraform.tfvars.example - Phase 01: S3 State Bucket
 # Copy to terraform.tfvars and customize before running terraform apply.
 #
 # NOTE: This phase uses hardcoded values in main.tf (no variables.tf).
