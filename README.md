@@ -12,7 +12,9 @@ Production-grade AWS infrastructure built with Terraform. Multi-AZ VPC architect
 
 ## About Me
 
-Operations engineer with 8+ years leading enterprise system deployments, now building cloud infrastructure with Terraform and AWS. My background spans logistics operations (USMC), SaaS platform rollouts (ezCater), and healthcare compliance (Amwell). That experience gave me a strong foundation in reliability, process documentation, and incident response, and those are the same skills that drive effective cloud operations.
+Cloud Operations Engineer and USMC veteran with 8+ years leading enterprise system deployments. I'm the founder of [RelayLaunch](https://github.com/Victor-David-Medina), a veteran-owned digital infrastructure consultancy, and I'm transitioning my operations background into cloud infrastructure with Terraform and AWS.
+
+Previously at ezCater, I led a 1,000+ user SaaS platform rollout that cut reconciliation time by roughly 90%. At Amwell, I managed healthcare compliance workflows. That mix of logistics operations (USMC), SaaS delivery, and healthcare compliance gave me a strong foundation in reliability, process documentation, and incident response - the same skills I apply to cloud operations today.
 
 ---
 
@@ -138,7 +140,11 @@ All documentation lives in the capstone project:
 
 ## Certifications
 
-- **AWS Cloud Practitioner (CLF-C02)** - In Progress
+| Certification | Status | Target |
+|---------------|--------|--------|
+| AWS Cloud Practitioner (CLF-C02) | In Progress | 2026 |
+| HashiCorp Terraform Associate | Planned | 2026 |
+| AWS Solutions Architect Associate | Planned | 2026-2027 |
 
 ---
 
