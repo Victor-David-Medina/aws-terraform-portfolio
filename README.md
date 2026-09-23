@@ -96,7 +96,7 @@ The goal is to show how I think about Day-2 operations, not just how I write Ter
 | `04-advanced-hcl/` | Advanced patterns | Workspaces, conditionals, `lookup()` |
 | `05-capstone/` | **Production VPC** | Multi-AZ, ASG, GuardDuty, CI/CD, full ops docs |
 
-Each phase builds on the previous one, progressing from basic resources to a production-style, multi-AZ infrastructure with monitoring, security, and operational documentation.
+Each phase builds on the previous one, progressing from basic resources to a production-style, multi-AZ infrastructure with security and monitoring built in, and operational docs to back it up.
 
 ---
 
