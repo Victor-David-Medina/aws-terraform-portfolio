@@ -1,20 +1,30 @@
 # Terraform Portfolio: VDM Cloud Infrastructure
 
 ![Terraform](https://img.shields.io/badge/Terraform-1.10+-623CE4?logo=terraform)
-![AWS](https://img.shields.io/badge/AWS-VPC%20%7C%20EC2%20%7C%20S3-FF9900?logo=amazon-aws)
 ![CI](https://github.com/Victor-David-Medina/aws-terraform-portfolio/actions/workflows/terraform.yml/badge.svg)
-![Security](https://img.shields.io/badge/Security-tfsec%20scanned-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 Production-grade AWS infrastructure built with Terraform. Multi-AZ VPC architecture with Auto Scaling, GuardDuty security monitoring, and full operational documentation.
+
+**Status:** complete, maintained best-effort.
 
 ---
 
 ## About Me
 
-Cloud Operations Engineer and USMC veteran with 8+ years leading enterprise system deployments. I'm the founder of [RelayLaunch](https://github.com/Victor-David-Medina), a veteran-owned digital infrastructure consultancy, and I'm transitioning my operations background into cloud infrastructure with Terraform and AWS.
+I'm David Medina, a Forward-Deployed AI Engineer and the founder of
+RelayLaunch LLC, an AI operations company for service businesses. My public
+work is AI systems: an LLM evaluation harness, an MCP server, and a
+LangGraph retrieval pipeline, all on this profile.
 
-Previously at ezCater, I led a 1,000+ user SaaS platform rollout that cut reconciliation time by roughly 90%. At Amwell, I managed healthcare compliance workflows. That mix of logistics operations (USMC), SaaS delivery, and healthcare compliance gave me a strong foundation in reliability, process documentation, and incident response - the same skills I apply to cloud operations today.
+Before AI engineering I spent 10+ years in finance, accounting, and
+operations, most recently at Blue Matter, and I served in the U.S. Marine
+Corps Reserve from 2013 to 2019. That operations background is why this
+portfolio is organized the way it is: architecture decision records, an
+operational runbook, and Day-2 thinking over demo code.
+
+This repository is my Terraform and AWS skills proof: multi-AZ VPC
+architecture, reusable modules, GuardDuty monitoring, and tfsec in CI.
 
 ---
 
